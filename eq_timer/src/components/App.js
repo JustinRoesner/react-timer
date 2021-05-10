@@ -1,5 +1,6 @@
 import React from 'react';
 import Timer from './Timer';
+import Example from './Example';
 
 export default () => {
   return (
