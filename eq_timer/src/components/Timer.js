@@ -6,6 +6,7 @@ class Timer extends React.Component {
     constructor(props){
         super(props)
         this.state = {
+            hidden: false,
             isOn: false,
             maxTime: 30,
             currentTime: 30,
@@ -26,6 +27,7 @@ class Timer extends React.Component {
         this.countDown = this.countDown.bind(this)
         this.findProgress = this.findProgress.bind(this)
         this.setShake = this.setShake.bind(this)
+        this.hideComponent = this.hideComponent.bind(this)
     }
 
     startTimer(){
@@ -51,12 +53,13 @@ class Timer extends React.Component {
         console.log("mins:")
         console.log(this.state.currentMinutes)
         //i dont have seconds or mins
-        if (this.state.currentSeconds === 0 && this.state.currentMinutes === 0){
+        if (this.state.currentSeconds == 0 && this.state.currentMinutes == 0){
             console.log("end the countdown")
             clearInterval(this.timer)
         }
         //i dont have seconds but i have mins
-        if (this.state.currentSeconds === 0 && this.state.currentMinutes > 0){
+        if (this.state.currentSeconds == 0 && this.state.currentMinutes > 0){
+            console.log("sub from mins for secs")
             this.setState({currentMinutes: this.state.currentMinutes - 1})
             this.setState({currentSeconds: this.state.currentSeconds + 60})
         }
@@ -116,25 +119,37 @@ class Timer extends React.Component {
         this.setState({nameOfBuff: e.target.value})
         console.log("name ok")
     }
-    
+    hideComponent(e){
+        this.setState({hidden: true})
+    }
     render(){
+            if (this.state.hidden == true){
+                return(
+                    <div></div>
+                );
+            }
+            else {
             return (
-            <div>
+            <div class="ui container" style={{ marginLeft: '100px' }}>
+            {/*  <div class="ui container">  */}
+                {/* 
                 <div>
                     <span className="firstLabel">Input minutes</span>
                     <span className="secondLabel">Input seconds</span>
                 </div>
+                */}
                 <br/>
                 <div class="ui input">
+                    <input class="ui input" type="text" placeholder="Name of buff..." value={this.state.nameOfBuff} onChange={this.onNameChange}/>
                     <input type="number" size="5" value={this.state.maxMinutes} onChange={this.onMinutesChange} />
                     <input type="number" size="5" value={this.state.maxTime} onChange={this.onSecondsChange} />
-                    <input class="ui input" type="text" placeholder="Name of buff..." value={this.state.nameOfBuff} onChange={this.onNameChange}/>
                     <button onClick={this.startTimer}>Start</button>
                     <button onClick={this.resetTimer}>Reset</button>
+                    <button onClick={this.hideComponent}>Delete</button>
                 </div>
                 <br/>
-                <h1 style={{ fontSize: 35}}>{this.state.nameOfBuff}</h1>
-                <h1 style={{ fontSize: 20 }}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</h1>
+                <label style={{ fontSize: 25 }}>{this.state.nameOfBuff}</label>
+                <label style={{ fontSize: 20 }}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</label>
 
                 <ShakeRotate
                     fixed={this.state.shakeIsOn}
@@ -149,9 +164,9 @@ class Timer extends React.Component {
                      />
 
                 </ShakeRotate>
-
             </div>
-        );
+            );
+            }
     }
 }
 
