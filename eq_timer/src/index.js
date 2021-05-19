@@ -5,20 +5,22 @@ import Timer from './components/Timer';
 
 class App extends (React.Component){
     state = {
-        timers: []
+        timers: [],
+        timerId: 0
     }
-
     addTimer = () => {
         this.setState({
-            timers: [...this.state.timers, <Timer />]
+            timerId: this.state.timerId + 1,
+            timers: [...this.state.timers, <Timer timerId={this.state.timerId} removeTimer={this.state.removeTimer} />]
         })
     }
-
+    removeTimer = (timerId) => {
+    }
     render(){
         return(
             <div>
                 <h1>eq_timer</h1>
-                <Timer />
+                <Timer timerId={this.state.timerId} removeTimer={this.state.removeTimer}/>
 
                 <div>
                     {this.state.timers}
@@ -28,5 +30,4 @@ class App extends (React.Component){
         )
     }
 }
-
 ReactDOM.render(<App />, document.querySelector('#root'));

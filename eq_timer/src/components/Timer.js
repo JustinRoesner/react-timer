@@ -16,9 +16,10 @@ class Timer extends React.Component {
             currentSeconds: 30,
             progress: 0,
             shakeIsOn: false,
-            nameOfBuff: ""
+            nameOfBuff: "",
+            timerId: props.timerId,
+            removeTimer: props.removeTimer
         }
-
         this.startTimer = this.startTimer.bind(this)
         this.resetTimer = this.resetTimer.bind(this)
         this.onMinutesChange = this.onMinutesChange.bind(this)
@@ -29,7 +30,6 @@ class Timer extends React.Component {
         this.setShake = this.setShake.bind(this)
         this.hideComponent = this.hideComponent.bind(this)
     }
-
     startTimer(){
         if (!this.state.isOn){
             this.setState({isOn: true})
@@ -46,7 +46,6 @@ class Timer extends React.Component {
         */
         console.log("start")
     }
-
     countDown(){
         console.log("secs:")
         console.log(this.state.currentSeconds)
@@ -71,7 +70,6 @@ class Timer extends React.Component {
         this.findProgress();
         //this.setShake();
     }
-
     findProgress(){
         let sec = this.state.currentSeconds;
         let min = this.state.currentMinutes;
@@ -94,7 +92,6 @@ class Timer extends React.Component {
             this.setState({shakeIsOn: false})
         }
     }
-
     resetTimer(){
         clearInterval(this.timer)
         this.setState({isOn: false })
@@ -104,12 +101,10 @@ class Timer extends React.Component {
         this.setState({progress: 0})
         console.log("reset");
     }
-
     onMinutesChange(e){
         this.setState({maxMinutes: e.target.value})
         console.log("min ok")
     }
-
     onSecondsChange(e){
         this.setState({maxTime: e.target.value})
         this.setState({maxSeconds: e.target.value})
@@ -119,8 +114,10 @@ class Timer extends React.Component {
         this.setState({nameOfBuff: e.target.value})
         console.log("name ok")
     }
-    hideComponent(e){
-        this.setState({hidden: true})
+    hideComponent(e) { 
+        //this.setState({hidden: true})
+        this.state.removeTimer(this.state.timerId)
+
     }
     render(){
             if (this.state.hidden == true){
@@ -150,11 +147,6 @@ class Timer extends React.Component {
                 <br/>
                 <label style={{ fontSize: 25 }}>{this.state.nameOfBuff}</label>
                 <label style={{ fontSize: 20 }}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</label>
-
-                <ShakeRotate
-                    fixed={this.state.shakeIsOn}
-                    >
-
                     <ProgressBar
                      completed={this.state.progress}
                      bgColor="#e8871b"
@@ -162,12 +154,9 @@ class Timer extends React.Component {
                      labelColor="#ffffff"
                      isLabelVisible={false}
                      />
-
-                </ShakeRotate>
             </div>
             );
             }
     }
 }
-
 export default Timer;
