@@ -18,7 +18,6 @@ class Timer extends React.Component {
             shakeIsOn: false,
             nameOfBuff: "",
             timerId: props.timerId,
-            removeTimer: props.removeTimer
         }
         this.startTimer = this.startTimer.bind(this)
         this.resetTimer = this.resetTimer.bind(this)
@@ -116,9 +115,9 @@ class Timer extends React.Component {
     }
     hideComponent(e) { 
         //this.setState({hidden: true})
-        this.state.removeTimer(this.state.timerId)
-
+        removeTimer(timerId)
     }
+    
     render(){
             if (this.state.hidden == true){
                 return(

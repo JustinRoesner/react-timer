@@ -8,19 +8,19 @@ class App extends (React.Component){
         timers: [],
         timerId: 0
     }
+    removeTimer = (timerId) => {
+    }
     addTimer = () => {
         this.setState({
             timerId: this.state.timerId + 1,
-            timers: [...this.state.timers, <Timer timerId={this.state.timerId} removeTimer={this.state.removeTimer} />]
+            timers: [...this.state.timers, <Timer timerId={this.state.timerId} removeTimer={this.removeTimer} />]
         })
-    }
-    removeTimer = (timerId) => {
     }
     render(){
         return(
             <div>
                 <h1>eq_timer</h1>
-                <Timer timerId={this.state.timerId} removeTimer={this.state.removeTimer}/>
+                <Timer timerId={this.state.timerId} removeTimer={this.removeTimer} />
 
                 <div>
                     {this.state.timers}
