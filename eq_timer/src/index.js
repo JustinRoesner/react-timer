@@ -1,12 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Timer from './components/Timer';
-//import { createMuiTheme } from '@material-ui/core/styles';
-//import { purple } from '@material-ui/core/colors';
-//import { green } from '@material-ui/core/colors';
-import { Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-//import classes from '*.module.css';
 
 /*
 const theme = createMuiTheme({
@@ -20,29 +14,6 @@ const theme = createMuiTheme({
       },
 });
 */
-const useStyles = makeStyles((theme) => ({
-    root: {
-        backgroundColor: theme.palette.background.default,
-        height:'100vh',
-        width: '100vw',
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column'
-    },
-    paper: {
-        padding: theme.spacing(2),
-        margin: theme.spacing(3),
-        alignSelf: 'center',
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column'
-    },
-    logo: {
-      maxWidth: '300px',
-      alignSelf: 'center'
-    },
-  }));
-   
 
 class App extends (React.Component){
     state = {
@@ -78,9 +49,8 @@ class App extends (React.Component){
     }
     render(){
         return(
-            <div className={useStyles.root}>
-                <Paper className={useStyles.paper}> 
-                <h1>eqtimer</h1>
+            <div>
+                <h1 style={{color: "#dbedf3"}}>eqtimer</h1>
                 <div>
                     {this.state.timerIds.map (id => {
                         if (id.isVisible){
@@ -100,7 +70,6 @@ class App extends (React.Component){
                     </div>
 
                 </div>
-                </Paper> 
             </div>
         )
     }

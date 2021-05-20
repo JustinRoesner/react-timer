@@ -45,6 +45,7 @@ class Timer extends React.Component {
         console.log("start")
     }
     countDown(){
+        //debugger
         console.log("secs:")
         console.log(this.state.currentSeconds)
         console.log("mins:")
@@ -56,7 +57,7 @@ class Timer extends React.Component {
             this.setState({isOn: false})
         }
         //i dont have seconds but i have mins
-        if (this.state.currentSeconds === 0 && this.state.currentMinutes > 0){
+        if (this.state.currentSeconds == 0 && this.state.currentMinutes > 0){
             console.log("sub from mins for secs")
             this.setState({currentMinutes: this.state.currentMinutes - 1})
             this.setState({currentSeconds: this.state.currentSeconds + 60})
@@ -79,7 +80,7 @@ class Timer extends React.Component {
         maxMin = maxMin * 60
 
         sec = min + sec
-        maxSec = maxMin + maxSec
+        maxSec = +maxMin + +maxSec
 
         this.setState({progress: sec / maxSec * 100})
     }
@@ -127,7 +128,7 @@ class Timer extends React.Component {
                 <div class="ui input">
                     <input class="ui input" type="text" placeholder="Name of buff..." value={this.state.nameOfBuff} onChange={this.onNameChange}/>
                     <input type="number" min="0" size="5" value={this.state.maxMinutes} onChange={this.onMinutesChange} />
-                    <input type="number" min="0" size="5" value={this.state.maxTime} onChange={this.onSecondsChange} />
+                    <input type="number" min="0" size="5" value={this.state.maxSeconds} onChange={this.onSecondsChange} />
                     <button onClick={this.startTimer}>Start</button>
                     <button onClick={this.resetTimer}>Reset</button>
                     <Switch
@@ -140,12 +141,13 @@ class Timer extends React.Component {
                     <button onClick={()=> this.props.removeTimer(this.props.timerId)}>Delete</button>
                 </div>
                 <br/>
-                <label style={{ fontSize: 25 }}>{this.state.nameOfBuff}</label>
-                <label style={{ fontSize: 20 }}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</label>
+                <label style={{ fontSize: 25, color: "#dbedf3"}}>{this.state.nameOfBuff}</label>
+                <label style={{ fontSize: 20, color: "#dbedf3"}}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</label>
                     <ProgressBar
                      completed={this.state.progress}
-                     bgColor="#e8871b"
-                     baseBgColor="#dad9d9"
+                     bgColor="#f73859"
+                     //bgColor="#e8871b"
+                     baseBgColor="#404b69"
                      labelColor="#ffffff"
                      isLabelVisible={false}
                      />
