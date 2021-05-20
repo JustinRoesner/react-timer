@@ -50,13 +50,13 @@ class Timer extends React.Component {
         console.log("mins:")
         console.log(this.state.currentMinutes)
         //i dont have seconds or mins
-        if (this.state.currentSeconds === 0 && this.state.currentMinutes === 0){
+        if (this.state.currentSeconds == 0 && this.state.currentMinutes == 0){
             console.log("end the countdown")
             clearInterval(this.timer)
             this.setState({isOn: false})
         }
         //i dont have seconds but i have mins
-        if (this.state.currentSeconds === 0 && this.state.currentMinutes > 0){
+        if (this.state.currentSeconds == 0 && this.state.currentMinutes > 0){
             console.log("sub from mins for secs")
             this.setState({currentMinutes: this.state.currentMinutes - 1})
             this.setState({currentSeconds: this.state.currentSeconds + 60})
