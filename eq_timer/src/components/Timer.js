@@ -139,61 +139,64 @@ function Timer(props) {
         setNameOfBuff(e.target.value)
         console.log("name ok")
     }
-            const classes = useStyles();
-            return (
-            <div class="ui container" style={{ marginLeft: '100px' }}>
-                <br/>
-                <div class="ui input">
-                    <input class="ui input" type="text" placeholder="Name of buff..." value={nameOfBuff} onChange={onNameChange}/>
-                    <input type="number" min="0" size="5" value={maxMinutes} onChange={onMinutesChange} />
-                    <input type="number" min="0" max="59" size="5" value={maxSeconds} onChange={onSecondsChange} />
+    const blockInvalidInput = (e) => {
+        ['+', '-'].includes(e.key) && e.preventDefault()
+    }
+    const classes = useStyles();
+    return (
+    <div class="ui container" style={{ marginLeft: '100px' }}>
+        <br/>
+        <div class="ui input">
+            <input class="ui input" type="text" placeholder="Name of buff..." value={nameOfBuff} onChange={onNameChange}/>
+            <input type="number" min="0" size="5" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+            <input type="number" min="0" max="59" size="5" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
 
-                    <Button
-                        onClick={startTimer}
-                        variant="contained"
-                        color="default"
-                        className={classes.button}
-                        size="small"
-                    >{<PlayArrowIcon />}</Button>
+            <Button
+                onClick={startTimer}
+                variant="contained"
+                color="default"
+                className={classes.button}
+                size="small"
+            >{<PlayArrowIcon />}</Button>
 
-                    <Button
-                        onClick={resetTimer}
-                        variant="contained"
-                        color="default"
-                        className={classes.button}
-                        size="small"
-                    >{<RefreshIcon/>}</Button>
+            <Button
+                onClick={resetTimer}
+                variant="contained"
+                color="default"
+                className={classes.button}
+                size="small"
+            >{<RefreshIcon/>}</Button>
 
-                    <Button
-                        onClick={()=> props.removeTimer(props.timerId)}
-                        variant="contained"
-                        color="default"
-                        className={classes.button}
-                        size="small"
-                    >{<DeleteForeverIcon/>}</Button>
+            <Button
+                onClick={()=> props.removeTimer(props.timerId)}
+                variant="contained"
+                color="default"
+                className={classes.button}
+                size="small"
+            >{<DeleteForeverIcon/>}</Button>
 
-                    <Switch
-                      Switch
-                      //checked={state.checkedA}
-                      //onChange={handleChange}
-                      name="checkedA"
-                      inputProps={{ 'aria-label': 'secondary checkbox' }}
-                    />
-                </div>
+            <Switch
+                Switch
+                //checked={state.checkedA}
+                //onChange={handleChange}
+                name="checkedA"
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+            />
+        </div>
 
-                <br/>
+        <br/>
 
-                <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
-                <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
-                    <ProgressBar
-                     completed={progress}
-                     bgColor="#f73859"
-                     //bgColor="#e8871b"
-                     baseBgColor="#404b69"
-                     labelColor="#ffffff"
-                     isLabelVisible={false}
-                     />
-            </div>
-            );
+        <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
+        <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
+            <ProgressBar
+                completed={progress}
+                bgColor="#f73859"
+                //bgColor="#e8871b"
+                baseBgColor="#404b69"
+                labelColor="#ffffff"
+                isLabelVisible={false}
+                />
+    </div>
+    );
 }
 export default Timer;
