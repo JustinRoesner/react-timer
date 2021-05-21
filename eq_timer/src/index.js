@@ -1,18 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Timer from './components/Timer';
+import AddIcon from '@material-ui/icons/Add';
 
-/*
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-          main: purple[500],
-        },
-        secondary: {
-          main: green[500],
-        },
-      },
-});
+/*   TODO MAKE INDEX.JS USING HOOKS SO THAT I CAN USE A REACT BUTTON TO ADD MORE TIMERS
+const useStyles = makeStyles((theme) => ({
+    button:{
+        margin: theme.spacing(1),
+    },
+}))
 */
 
 class App extends (React.Component){

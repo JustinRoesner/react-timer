@@ -1,6 +1,19 @@
 import React from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { Switch } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
+/*
+const useStyles = makeStyles((theme) => ({
+    button:{
+        margin: theme.spacing(1),
+    },
+}))
+*/
 
 class Timer extends React.Component {
     constructor(props){
@@ -34,6 +47,7 @@ class Timer extends React.Component {
             this.setState({currentTime: this.state.maxTime})
             this.setState({currentMinutes: this.state.maxMinutes})
             this.setState({currentSeconds: this.state.maxSeconds})
+            this.findProgress();
             this.timer = setInterval(this.countDown, 1000)
         }
         /*
@@ -45,12 +59,13 @@ class Timer extends React.Component {
         console.log("start")
     }
     countDown(){
+        //debugger
         console.log("secs:")
         console.log(this.state.currentSeconds)
         console.log("mins:")
         console.log(this.state.currentMinutes)
         //i dont have seconds or mins
-        if (this.state.currentSeconds == 0 && this.state.currentMinutes == 0){
+        if (this.state.currentSeconds === 0 && this.state.currentMinutes === 0){
             console.log("end the countdown")
             clearInterval(this.timer)
             this.setState({isOn: false})
@@ -79,7 +94,7 @@ class Timer extends React.Component {
         maxMin = maxMin * 60
 
         sec = min + sec
-        maxSec = maxMin + maxSec
+        maxSec = +maxMin + +maxSec
 
         this.setState({progress: sec / maxSec * 100})
     }
@@ -114,20 +129,22 @@ class Timer extends React.Component {
         console.log("name ok")
     }
     render(){
+            //const classes = useStyles();
             return (
             <div class="ui container" style={{ marginLeft: '100px' }}>
-            {/*  <div class="ui container">  */}
-                {/* 
-                <div>
-                    <span className="firstLabel">Input minutes</span>
-                    <span className="secondLabel">Input seconds</span>
-                </div>
-                */}
                 <br/>
                 <div class="ui input">
                     <input class="ui input" type="text" placeholder="Name of buff..." value={this.state.nameOfBuff} onChange={this.onNameChange}/>
                     <input type="number" min="0" size="5" value={this.state.maxMinutes} onChange={this.onMinutesChange} />
-                    <input type="number" min="0" size="5" value={this.state.maxTime} onChange={this.onSecondsChange} />
+                    <input type="number" min="0" max="60" size="5" value={this.state.maxSeconds} onChange={this.onSecondsChange} />
+                    {/*
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        startIcon={<PlayArrowIcon />}
+                    ></Button>
+                    */}
                     <button onClick={this.startTimer}>Start</button>
                     <button onClick={this.resetTimer}>Reset</button>
                     <Switch
@@ -140,12 +157,13 @@ class Timer extends React.Component {
                     <button onClick={()=> this.props.removeTimer(this.props.timerId)}>Delete</button>
                 </div>
                 <br/>
-                <label style={{ fontSize: 25 }}>{this.state.nameOfBuff}</label>
-                <label style={{ fontSize: 20 }}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</label>
+                <label style={{ fontSize: 25, color: "#dbedf3"}}>{this.state.nameOfBuff}</label>
+                <label style={{ fontSize: 20, color: "#dbedf3"}}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</label>
                     <ProgressBar
                      completed={this.state.progress}
-                     bgColor="#e8871b"
-                     baseBgColor="#dad9d9"
+                     bgColor="#f73859"
+                     //bgColor="#e8871b"
+                     baseBgColor="#404b69"
                      labelColor="#ffffff"
                      isLabelVisible={false}
                      />

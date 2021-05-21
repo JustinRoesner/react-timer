@@ -1,136 +1,177 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { Switch } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-class Timer extends React.Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            hidden: false,
-            isOn: false,
-            maxTime: 30,
-            currentTime: 30,
-            maxMinutes: 0,
-            maxSeconds: 30,
-            currentMinutes: 0,
-            currentSeconds: 30,
-            progress: 0,
-            shakeIsOn: false,
-            nameOfBuff: "",
-            timerId: props.timerId,
+const useStyles = makeStyles((theme) => ({
+    button:{
+        margin: theme.spacing(1),
+    },
+}))
+
+const useInterval = (callback, delay) => {
+    const intervalId = React.useRef(null);
+    const savedCallback = React.useRef(callback);
+  
+    React.useEffect(() => {
+      savedCallback.current = callback;
+    });
+  
+    React.useEffect(() => {
+      const tick = () => savedCallback.current();
+  
+      if (typeof delay === "number") {
+        intervalId.current = window.setInterval(tick, delay);
+  
+        return () => window.clearInterval(intervalId.current);
+      }
+    }, [delay]);
+  
+    return intervalId.current;
+  };
+
+function Timer(props) {
+    //num
+    const [progress, setProgress] = useState(100)
+
+    const [currentMinutes, setCurrentMinutes] = useState(0)
+    const [maxMinutes, setMaxMinutes] = useState(0)
+
+    const [currentSeconds, setCurrentSeconds] = useState(30)
+    const [maxSeconds, setMaxSeconds] = useState(30)
+
+    const [currentTime, setCurrentTime] = useState(30)
+    const [maxTime, setMaxTime] = useState(30)
+
+    const [timerId, setTimerId] = useState(props.timerId)
+
+    //bool
+    const [isOn, setIsOn] = useState(false)
+    const [shakeIsOn, setShakeIsOn] = useState(false)
+
+    //string
+    const [nameOfBuff, setNameOfBuff] = useState('')
+
+    useInterval(() =>{
+        countDown()
+    }, isOn === true ? 1000 : null)
+
+    const startTimer = () => {
+        if (!isOn){
+            setIsOn(true)
+            setCurrentMinutes(maxMinutes)
+            setCurrentSeconds(maxSeconds)
+            setCurrentTime(maxTime)
+            findProgress()
         }
-        this.startTimer = this.startTimer.bind(this)
-        this.resetTimer = this.resetTimer.bind(this)
-        this.onMinutesChange = this.onMinutesChange.bind(this)
-        this.onSecondsChange = this.onSecondsChange.bind(this)
-        this.onNameChange = this.onNameChange.bind(this)
-        this.countDown = this.countDown.bind(this)
-        this.findProgress = this.findProgress.bind(this)
-        this.setShake = this.setShake.bind(this)
-    }
-    startTimer(){
-        if (!this.state.isOn){
-            this.setState({isOn: true})
-            this.setState({currentTime: this.state.maxTime})
-            this.setState({currentMinutes: this.state.maxMinutes})
-            this.setState({currentSeconds: this.state.maxSeconds})
-            this.timer = setInterval(this.countDown, 1000)
-        }
-        /*
-        this.timer = setInterval(() => this.setState({
-            currentTime: this.state.currentTime - 1,
-            
-        }), 1000)
-        */
         console.log("start")
     }
-    countDown(){
+    const countDown = () => {
         //debugger
         console.log("secs:")
-        console.log(this.state.currentSeconds)
+        console.log(currentSeconds)
         console.log("mins:")
-        console.log(this.state.currentMinutes)
+        console.log(currentMinutes)
         //i dont have seconds or mins
-        if (this.state.currentSeconds === 0 && this.state.currentMinutes === 0){
+        if (currentSeconds === 0 && currentMinutes === 0){
             console.log("end the countdown")
-            clearInterval(this.timer)
-            this.setState({isOn: false})
+            setIsOn(false)
         }
         //i dont have seconds but i have mins
-        if (this.state.currentSeconds == 0 && this.state.currentMinutes > 0){
+        if (currentSeconds == 0 && currentMinutes > 0){
             console.log("sub from mins for secs")
-            this.setState({currentMinutes: this.state.currentMinutes - 1})
-            this.setState({currentSeconds: this.state.currentSeconds + 60})
+            setCurrentMinutes(currentMinutes - 1)
+            setCurrentSeconds(currentSeconds + 60)
         }
         //i have seconds
-        if (this.state.currentSeconds > 0){
+        if (currentSeconds > 0){
             console.log("- 1 sec")
-            this.setState({currentSeconds: this.state.currentSeconds - 1})
+            setCurrentSeconds(currentSeconds - 1)
         }
-        this.findProgress();
+        findProgress();
         //this.setShake();
     }
-    findProgress(){
-        let sec = this.state.currentSeconds;
-        let min = this.state.currentMinutes;
-        let maxSec = this.state.maxSeconds;
-        let maxMin = this.state.maxMinutes;
+    const findProgress = () => {
+        let sec = currentSeconds;
+        let min = currentMinutes;
+        let maxSec = maxSeconds;
+        let maxMin = maxMinutes;
 
         min = min * 60
         maxMin = maxMin * 60
 
-        sec = min + sec
+        sec = min + sec - 1 
         maxSec = +maxMin + +maxSec
-
-        this.setState({progress: sec / maxSec * 100})
+        setProgress(sec / maxSec * 100)
     }
-    setShake(){
-        if (this.state.progress === 0){
-            this.setState({shakeIsOn: true})
+    const setShake = () => {
+        if (progress === 0){
+            setShakeIsOn(true)
         }
         else{
-            this.setState({shakeIsOn: false})
+            setShakeIsOn(false)
         }
     }
-    resetTimer(){
-        clearInterval(this.timer)
-        this.setState({isOn: false })
-        this.setState({currentMinutes: this.state.maxMinutes})
-        this.setState({currentSeconds: this.state.maxSeconds})
-        this.setState({currentTime: this.state.maxTime})
-        this.setState({progress: 0})
+    const resetTimer = () => {
+        setIsOn(false)
+        setCurrentMinutes(maxMinutes)
+        setCurrentSeconds(maxSeconds)
+        setCurrentTime(maxTime)
+        setProgress(100)
         console.log("reset");
     }
-    onMinutesChange(e){
-        this.setState({maxMinutes: e.target.value})
+    const onMinutesChange = (e) => {
+        setMaxMinutes(e.target.value)
+        setCurrentMinutes(e.target.value)
         console.log("min ok")
     }
-    onSecondsChange(e){
-        this.setState({maxTime: e.target.value})
-        this.setState({maxSeconds: e.target.value})
+    const onSecondsChange = (e) => {
+        setMaxTime(e.target.value)
+        setMaxSeconds(e.target.value)
+        setCurrentSeconds(e.target.value)
         console.log("sec ok")
     }
-    onNameChange(e){
-        this.setState({nameOfBuff: e.target.value})
+    const onNameChange = (e) => {
+        setNameOfBuff(e.target.value)
         console.log("name ok")
     }
-    render(){
+            const classes = useStyles();
             return (
             <div class="ui container" style={{ marginLeft: '100px' }}>
-            {/*  <div class="ui container">  */}
-                {/* 
-                <div>
-                    <span className="firstLabel">Input minutes</span>
-                    <span className="secondLabel">Input seconds</span>
-                </div>
-                */}
                 <br/>
                 <div class="ui input">
-                    <input class="ui input" type="text" placeholder="Name of buff..." value={this.state.nameOfBuff} onChange={this.onNameChange}/>
-                    <input type="number" min="0" size="5" value={this.state.maxMinutes} onChange={this.onMinutesChange} />
-                    <input type="number" min="0" size="5" value={this.state.maxSeconds} onChange={this.onSecondsChange} />
-                    <button onClick={this.startTimer}>Start</button>
-                    <button onClick={this.resetTimer}>Reset</button>
+                    <input class="ui input" type="text" placeholder="Name of buff..." value={nameOfBuff} onChange={onNameChange}/>
+                    <input type="number" min="0" size="5" value={maxMinutes} onChange={onMinutesChange} />
+                    <input type="number" min="0" max="59" size="5" value={maxSeconds} onChange={onSecondsChange} />
+
+                    <Button
+                        onClick={startTimer}
+                        variant="contained"
+                        color="default"
+                        className={classes.button}
+                        size="small"
+                    >{<PlayArrowIcon />}</Button>
+
+                    <Button
+                        onClick={resetTimer}
+                        variant="contained"
+                        color="default"
+                        className={classes.button}
+                        size="small"
+                    >{<RefreshIcon/>}</Button>
+
+                    <Button
+                        onClick={()=> props.removeTimer(props.timerId)}
+                        variant="contained"
+                        color="default"
+                        className={classes.button}
+                        size="small"
+                    >{<DeleteForeverIcon/>}</Button>
+
                     <Switch
                       Switch
                       //checked={state.checkedA}
@@ -138,13 +179,14 @@ class Timer extends React.Component {
                       name="checkedA"
                       inputProps={{ 'aria-label': 'secondary checkbox' }}
                     />
-                    <button onClick={()=> this.props.removeTimer(this.props.timerId)}>Delete</button>
                 </div>
+
                 <br/>
-                <label style={{ fontSize: 25, color: "#dbedf3"}}>{this.state.nameOfBuff}</label>
-                <label style={{ fontSize: 20, color: "#dbedf3"}}>{this.state.currentMinutes} mins {this.state.currentSeconds} secs</label>
+
+                <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
+                <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
                     <ProgressBar
-                     completed={this.state.progress}
+                     completed={progress}
                      bgColor="#f73859"
                      //bgColor="#e8871b"
                      baseBgColor="#404b69"
@@ -153,6 +195,5 @@ class Timer extends React.Component {
                      />
             </div>
             );
-    }
 }
 export default Timer;
