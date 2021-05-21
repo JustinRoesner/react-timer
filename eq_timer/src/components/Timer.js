@@ -85,7 +85,7 @@ function Timer(props) {
         if (currentSeconds == 0 && currentMinutes > 0){
             console.log("sub from mins for secs")
             setCurrentMinutes(currentMinutes - 1)
-            setCurrentSeconds(currentSeconds + 60)
+            setCurrentSeconds(+currentSeconds + 59)
         }
         //i have seconds
         if (currentSeconds > 0){
