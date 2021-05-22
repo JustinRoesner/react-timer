@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
-import { Switch } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+
+//Icon buttons
 import { makeStyles } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
+//Switch
+import { Switch } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     button:{
         margin: theme.spacing(1),
     },
+    iconButton:{
+        color: '#dbedf3',
+        size: 'medium'
+    }
 }))
 
 const useInterval = (callback, delay) => {
@@ -151,6 +160,7 @@ function Timer(props) {
             <input type="number" min="0" size="5" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
             <input type="number" min="0" max="59" size="5" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
 
+            {/*
             <Button
                 onClick={startTimer}
                 variant="contained"
@@ -158,7 +168,6 @@ function Timer(props) {
                 className={classes.button}
                 size="small"
             >{<PlayArrowIcon />}</Button>
-
             <Button
                 onClick={resetTimer}
                 variant="contained"
@@ -166,7 +175,6 @@ function Timer(props) {
                 className={classes.button}
                 size="small"
             >{<RefreshIcon/>}</Button>
-
             <Button
                 onClick={()=> props.removeTimer(props.timerId)}
                 variant="contained"
@@ -174,6 +182,19 @@ function Timer(props) {
                 className={classes.button}
                 size="small"
             >{<DeleteForeverIcon/>}</Button>
+            */}
+
+            <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
+                <PlayArrowIcon />
+            </IconButton>
+
+            <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
+                <RefreshIcon />
+            </IconButton>
+
+            <IconButton className={classes.iconButton} aria-label="" onClick={()=> props.removeTimer(props.timerId)}>
+                <DeleteForeverIcon />
+            </IconButton>
 
             <Switch
                 Switch

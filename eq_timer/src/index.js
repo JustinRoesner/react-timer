@@ -1,73 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import Timer from './components/Timer';
+
+//icon buttons
+import { makeStyles } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add';
 
-/*   TODO MAKE INDEX.JS USING HOOKS SO THAT I CAN USE A REACT BUTTON TO ADD MORE TIMERS
 const useStyles = makeStyles((theme) => ({
     button:{
         margin: theme.spacing(1),
     },
-}))
-*/
-
-class App extends (React.Component){
-    state = {
-        timerIds: [{
-            id: 0,
-            isVisible: true
-        }], 
-        timerId: 0    // current timer id this will increment each one
+    iconButton:{
+        color: '#dbedf3',
+        size: 'medium'
     }
+}))
+
+function App (){
+    const [timerIds, setTimerIds] = useState([{
+        id: 0,
+        isVisible: true
+    }])
+    const [timerId, setTimerId] = useState(0)    // current timer id this will increment each one
    
-    //TODO
-    //ON MOUNT RUN ADD TIMER FOR THE FIRST TIME
-    removeTimer = (timerId) => {
-        const modifiedTimers = this.state.timerIds.map (timer => {
+    const removeTimer = (timerId) => {
+        const modifiedTimers = timerIds.map (timer => {
                             if (timer.id === timerId){
                                 return {id: timer.id, isVisible: false}
                             }
                             else{
                                 return timer 
                             }})
+        setTimerIds(modifiedTimers)
+    }
 
-        this.setState({
-            //timerIds: this.state.timerIds.filter(id => id != timerId)
-            timerIds: modifiedTimers 
-            })
+    const addTimer = () => {
+        const tempTimerId = timerId + 1
+        setTimerId(tempTimerId)
+        setTimerIds([...timerIds, {id: tempTimerId, isVisible: true}])
     }
-    addTimer = () => {
-        const timerId = this.state.timerId + 1
-        this.setState({
-            timerId: timerId,
-            timerIds: [...this.state.timerIds, {id: timerId, isVisible: true}],
-        })
-    }
-    render(){
-        return(
+
+    const classes = useStyles();
+    return(
+        <div>
+            <h1 style={{color: "#dbedf3"}}>eqtimer</h1>
             <div>
-                <h1 style={{color: "#dbedf3"}}>eqtimer</h1>
-                <div>
-                    {this.state.timerIds.map (id => {
-                        if (id.isVisible){
-                            return <Timer timerId={id.id} removeTimer={this.removeTimer} />
-                        }
-                        else{
-                            return null
-                        }
-                    })}
+                {timerIds.map (id => {
+                    if (id.isVisible){
+                        return <Timer timerId={id.id} removeTimer={removeTimer} />
+                    }
+                    else{
+                        return null
+                    }
+                })}
 
-                    <br/>
+                <br/>
 
-                    <div class="ui one column stackable center aligned page grid">
-                        <div class="column twelve wide">
-                            <button onClick={this.addTimer}>+</button>
-                        </div>
+                <div class="ui one column stackable center aligned page grid">
+                    <div class="column twelve wide">
+                        <IconButton className={classes.iconButton} aria-label="" onClick={addTimer}>
+                            <AddIcon />
+                        </IconButton>
                     </div>
-
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
 ReactDOM.render(<App />, document.querySelector('#root'));
