@@ -2,22 +2,71 @@ import React, { useState } from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
 import Button from '@material-ui/core/Button';
 
+//text field input
+import TextField from '@material-ui/core/TextField'
+
 //Icon buttons
 import { makeStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditIcon from '@material-ui/icons/Edit';
 
 //Switch
 import { Switch } from '@material-ui/core';
+import { PlayCircleFilledWhite } from '@material-ui/icons';
+
+//grid
+import {Grid} from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
-    button:{
+    /*root:{
+        //margin: theme.spacing(1),
+        palette: {
+            primary: {
+                main: '#dbedf3'
+            },
+            secondary: {
+                main: '#f73859'
+            }
+        },
+        width: '25ch'
+    },
+    */
+    textField:{
         margin: theme.spacing(1),
+        palette: {
+            primary: {
+                main: '#f73859' //red
+                //main: '#dbedf3' //white 
+            },
+            secondary: {
+                main: '#f73859' //red
+            }
+        },
+        width: '13ch'
+    },
+    numberField:{
+        margin: theme.spacing(1),
+        palette: {
+            primary: {
+                main: '#dbedf3' //white 
+            },
+            secondary: {
+                main: '#f73859' //red
+            }
+        },
+        width: '6ch'
+    },
+    button:{
+       // margin: theme.spacing(1),
+        //margin: theme.spacing(1),
     },
     iconButton:{
-        color: '#dbedf3',
+        margin: theme.spacing(1),
+        //margin: theme.spacing(1),
+        color: '#dbedf3', //white 
         size: 'medium'
     }
 }))
@@ -61,6 +110,7 @@ function Timer(props) {
     //bool
     const [isOn, setIsOn] = useState(false)
     const [shakeIsOn, setShakeIsOn] = useState(false)
+    const [editIsOn, setEditIsOn] = useState(true)
 
     //string
     const [nameOfBuff, setNameOfBuff] = useState('')
@@ -151,72 +201,133 @@ function Timer(props) {
     const blockInvalidInput = (e) => {
         ['+', '-'].includes(e.key) && e.preventDefault()
     }
+    const switchEditMode = () => {
+        if (editIsOn === true){
+            setEditIsOn(false)
+        }
+        else{
+            setEditIsOn(true)
+        }
+    }
+    const showEdit = () => {
+        if (editIsOn){
+            return (
+                <TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
+                //<TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+                //<TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+            );
+        }
+    }
     const classes = useStyles();
     return (
     <div class="ui container" style={{ marginLeft: '100px' }}>
-        <br/>
-        <div class="ui input">
-            <input class="ui input" type="text" placeholder="Name of buff..." value={nameOfBuff} onChange={onNameChange}/>
-            <input type="number" min="0" size="5" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
-            <input type="number" min="0" max="59" size="5" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
-
-            {/*
-            <Button
-                onClick={startTimer}
-                variant="contained"
-                color="default"
-                className={classes.button}
-                size="small"
-            >{<PlayArrowIcon />}</Button>
-            <Button
-                onClick={resetTimer}
-                variant="contained"
-                color="default"
-                className={classes.button}
-                size="small"
-            >{<RefreshIcon/>}</Button>
-            <Button
-                onClick={()=> props.removeTimer(props.timerId)}
-                variant="contained"
-                color="default"
-                className={classes.button}
-                size="small"
-            >{<DeleteForeverIcon/>}</Button>
+        {/* </div><div class="ui input">  */}
+                        {/*
             */}
 
-            <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
-                <PlayArrowIcon />
-            </IconButton>
+            {/*
+            <input class="ui input" 
+                type="text" 
+                placeholder="Name of buff..." 
+                value={nameOfBuff} 
+                onChange={onNameChange}/> 
 
-            <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
-                <RefreshIcon />
-            </IconButton>
+            <input type="number" 
+                min="0" 
+                max="900" 
+                size="1" 
+                value={maxMinutes} 
+                onKeyDown={blockInvalidInput} 
+                onChange={onMinutesChange} />
 
-            <IconButton className={classes.iconButton} aria-label="" onClick={()=> props.removeTimer(props.timerId)}>
-                <DeleteForeverIcon />
-            </IconButton>
+            <input type="number" 
+                min="0" 
+                max="59" 
+                size="1" 
+                value={maxSeconds} 
+                onKeyDown={blockInvalidInput} 
+                onChange={onSecondsChange} />
+            */}
 
-            <Switch
-                Switch
-                //checked={state.checkedA}
-                //onChange={handleChange}
-                name="checkedA"
-                inputProps={{ 'aria-label': 'secondary checkbox' }}
+            
+
+        <Grid container spacing={1}>
+            <Grid item xs={6}>
+                <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
+            </Grid>
+            <Grid item xs={6}>
+                <div class="ui one column stackable center aligned page grid">
+                    <div class="column twelve wide">
+                        <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
+                    </div>
+                </div>
+            </Grid>
+        </Grid>
+
+        <ProgressBar
+            completed={progress}
+            bgColor="#f73859"
+            baseBgColor="#404b69"
+            labelColor="#ffffff"
+            isLabelVisible={false}
             />
-        </div>
 
-        <br/>
+        <Grid container spacing={1}>
 
-        <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
-        <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
-            <ProgressBar
-                completed={progress}
-                bgColor="#f73859"
-                //bgColor="#e8871b"
-                baseBgColor="#404b69"
-                labelColor="#ffffff"
-                isLabelVisible={false}
-                />
+            <Grid item xs={6}>
+                {/* TODO: HOW TO RETURN MORE THAN ONE STATEMENT WTF}
+                {/* TODO: MATERIAL SET MAXIMUM NUMBER AND REVALIDATE NEGATIVE NUMBERS}
+                {/* editing */}
+                <IconButton className={classes.iconButton} aria-label="" onClick={switchEditMode}>
+                    <EditIcon />
+                </IconButton>
+
+                {editIsOn ? (
+                    <TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
+                    ): (
+                    <div></div>
+                )}
+                {editIsOn ? (
+                    <TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+                    ): (
+                    <div></div>
+                )}
+                {editIsOn ? (
+                    <TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                    ): (
+                    <div></div>
+                )}
+               
+            </Grid>
+            <Grid item xs={6}>
+                <div class="ui one column stackable center aligned page grid">
+                    <div class="column twelve wide">
+                        {/* buttons */}
+                        <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
+                            <PlayArrowIcon />
+                        </IconButton>
+
+                        <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
+                            <RefreshIcon />
+                        </IconButton>
+
+                        <IconButton className={classes.iconButton} aria-label="" onClick={()=> props.removeTimer(props.timerId)}>
+                            <DeleteForeverIcon />
+                        </IconButton>
+                        {/* 
+                        <Switch
+                            className={classes.iconButton}
+                            Switch
+                            //checked={state.checkedA}
+                            //onChange={handleChange}
+                            name="checkedA"
+                            inputProps={{ 'aria-label': 'secondary checkbox' }}
+                            />
+                        */}
+                    </div>
+                </div>
+            </Grid>
+        </Grid>
     </div>
     );
 }
