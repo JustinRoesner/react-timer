@@ -7,6 +7,13 @@ import { makeStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add';
 
+//box 
+import Box from '@material-ui/core/Box'
+
+//theme
+import { ThemeProvider } from '@material-ui/core/styles'
+import theme from './Theme/theme'
+
 const useStyles = makeStyles((theme) => ({
     button:{
         margin: theme.spacing(1),
@@ -44,27 +51,31 @@ function App (){
     const classes = useStyles();
     return(
         <div>
-            <h1 style={{color: "#dbedf3"}}>eqtimer</h1>
-            <div>
-                {timerIds.map (id => {
-                    if (id.isVisible){
-                        return <Timer timerId={id.id} removeTimer={removeTimer} />
-                    }
-                    else{
-                        return null
-                    }
-                })}
+            <ThemeProvider theme={theme}> 
+                <Box p={3}>
+                    <h1 style={{color: "#dbedf3"}}>eqtimer</h1>
+                </Box>
+                <div>
+                    {timerIds.map (id => {
+                        if (id.isVisible){
+                            return <Timer timerId={id.id} removeTimer={removeTimer} />
+                        }
+                        else{
+                            return null
+                        }
+                    })}
 
-                <br/>
+                    <br/>
 
-                <div class="ui one column stackable center aligned page grid">
-                    <div class="column twelve wide">
-                        <IconButton className={classes.iconButton} aria-label="" onClick={addTimer}>
-                            <AddIcon />
-                        </IconButton>
+                    <div class="ui one column stackable center aligned page grid">
+                        <div class="column twelve wide">
+                            <IconButton className={classes.iconButton} aria-label="" onClick={addTimer}>
+                                <AddIcon />
+                            </IconButton>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ThemeProvider> 
         </div>
     )
 }

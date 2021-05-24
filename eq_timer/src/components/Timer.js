@@ -18,49 +18,30 @@ import { Switch } from '@material-ui/core';
 import { PlayCircleFilledWhite } from '@material-ui/icons';
 
 //grid
-import {Grid} from '@material-ui/core'
+import {Grid} from '@material-ui/core';
+
+//box
+import inputBase from "@material-ui/core"
+import Box from '@material-ui/core/Box';
+import { blue } from '@material-ui/core/colors';
+import { yellow } from '@material-ui/core/colors';
+
+import {
+  createStyles,
+  ThemeProvider
+} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-    /*root:{
-        //margin: theme.spacing(1),
-        palette: {
-            primary: {
-                main: '#dbedf3'
-            },
-            secondary: {
-                main: '#f73859'
-            }
-        },
-        width: '25ch'
-    },
-    */
     textField:{
         margin: theme.spacing(1),
-        palette: {
-            primary: {
-                main: '#f73859' //red
-                //main: '#dbedf3' //white 
-            },
-            secondary: {
-                main: '#f73859' //red
-            }
-        },
-        width: '13ch'
+        width: '11ch'
     },
     numberField:{
         margin: theme.spacing(1),
-        palette: {
-            primary: {
-                main: '#dbedf3' //white 
-            },
-            secondary: {
-                main: '#f73859' //red
-            }
-        },
+        color: '#dbedf3',
         width: '6ch'
     },
     button:{
-       // margin: theme.spacing(1),
         //margin: theme.spacing(1),
     },
     iconButton:{
@@ -209,18 +190,10 @@ function Timer(props) {
             setEditIsOn(true)
         }
     }
-    const showEdit = () => {
-        if (editIsOn){
-            return (
-                <TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
-                //<TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
-                //<TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
-            );
-        }
-    }
     const classes = useStyles();
     return (
-    <div class="ui container" style={{ marginLeft: '100px' }}>
+    //<div class="ui container" > 
+    <div> 
         {/* </div><div class="ui input">  */}
                         {/*
             */}
@@ -251,6 +224,7 @@ function Timer(props) {
 
             
 
+        <Box pl={6} pr={6}>
         <Grid container spacing={1}>
             <Grid item xs={6}>
                 <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
@@ -275,7 +249,7 @@ function Timer(props) {
         <Grid container spacing={1}>
 
             <Grid item xs={6}>
-                {/* TODO: HOW TO RETURN MORE THAN ONE STATEMENT WTF}
+                {/* TODO: HOW TO RETURN MORE THAN ONE STATEMENT }
                 {/* TODO: MATERIAL SET MAXIMUM NUMBER AND REVALIDATE NEGATIVE NUMBERS}
                 {/* editing */}
                 <IconButton className={classes.iconButton} aria-label="" onClick={switchEditMode}>
@@ -283,17 +257,21 @@ function Timer(props) {
                 </IconButton>
 
                 {editIsOn ? (
-                    <TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
+                    <TextField InputProps={{ className: classes.textField}} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
+                    //<TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
                     ): (
                     <div></div>
                 )}
                 {editIsOn ? (
-                    <TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+                    <TextField InputProps={{ className: classes.numberField}} id="standard-basic" label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+                    //<TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
                     ): (
                     <div></div>
                 )}
                 {editIsOn ? (
-                    <TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                    <TextField InputProps={{ className: classes.numberField}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                    //<TextField InputLabelProps={{classes:{root: classes.cssLabel, focused: classes.cssLabel}}}InputProps={{className: classes.numberField, focused: classes.cssFocused, notchedOutline: classes.notchedOutline}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                    //<TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
                     ): (
                     <div></div>
                 )}
@@ -328,6 +306,7 @@ function Timer(props) {
                 </div>
             </Grid>
         </Grid>
+        </Box> 
     </div>
     );
 }
