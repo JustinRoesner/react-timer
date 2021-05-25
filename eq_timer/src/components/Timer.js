@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import ProgressBar from "@ramonak/react-progress-bar";
+import ProgressBar from '@ramonak/react-progress-bar';
 import Button from '@material-ui/core/Button';
 
 //text field input
-import TextField from '@material-ui/core/TextField'
+import TextField from '@material-ui/core/TextField';
 
-//Icon buttons
+//icon buttons
 import { makeStyles } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton'
+import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
-//Switch
+//switch
 import { Switch } from '@material-ui/core';
 import { PlayCircleFilledWhite } from '@material-ui/icons';
 
@@ -21,15 +21,17 @@ import { PlayCircleFilledWhite } from '@material-ui/icons';
 import {Grid} from '@material-ui/core';
 
 //box
-import inputBase from "@material-ui/core"
 import Box from '@material-ui/core/Box';
-import { blue } from '@material-ui/core/colors';
-import { yellow } from '@material-ui/core/colors';
 
+//theme
 import {
   createStyles,
   ThemeProvider
 } from "@material-ui/core/styles";
+
+//audio
+import useEffect from "react";
+import soundFile from '../assets/ff.mp3';
 
 const useStyles = makeStyles((theme) => ({
     textField:{
@@ -71,7 +73,35 @@ const useInterval = (callback, delay) => {
     }, [delay]);
   
     return intervalId.current;
-  };
+};
+
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+const useAudio = url => {
+    const [audio] = useState(new Audio(soundFile));
+    //const [audio] = useState(new Audio("http://soundfxcenter.com/video-games/final-fantasy-xi/8d82b5_Final_Fantasy_XI_Caught_Fish_Sound_Effect.mp3"));
+    const [playing, setPlaying] = useState(false);
+  
+    const toggle = () => setPlaying(!playing);
+  
+    React.useEffect(() => {
+        audio.volume = 0.25;
+        playing ? audio.play() : audio.pause();
+      },
+      [playing]
+    );
+  
+    React.useEffect(() => {
+      audio.addEventListener('ended', () => setPlaying(false));
+      return () => {
+        audio.removeEventListener('ended', () => setPlaying(false));
+      };
+    }, []);
+  
+    return [playing, toggle];
+};
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 
 function Timer(props) {
     //num
@@ -95,6 +125,9 @@ function Timer(props) {
 
     //string
     const [nameOfBuff, setNameOfBuff] = useState('')
+
+    //audio
+    const [playing, toggle] = useAudio();
 
     useInterval(() =>{
         countDown()
@@ -120,6 +153,7 @@ function Timer(props) {
         if (currentSeconds === 0 && currentMinutes === 0){
             console.log("end the countdown")
             setIsOn(false)
+            toggle('true') // PLAY SOUND
         }
         //i dont have seconds but i have mins
         if (currentSeconds == 0 && currentMinutes > 0){
@@ -225,88 +259,91 @@ function Timer(props) {
             
 
         <Box pl={6} pr={6}>
-        <Grid container spacing={1}>
-            <Grid item xs={6}>
-                <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
-            </Grid>
-            <Grid item xs={6}>
-                <div class="ui one column stackable center aligned page grid">
-                    <div class="column twelve wide">
-                        <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
+            <Grid container spacing={1}>
+                <Grid item xs={6}>
+                    <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
+                </Grid>
+                <Grid item xs={6}>
+                    <div class="ui one column stackable center aligned page grid">
+                        <div class="column twelve wide">
+                            <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
+                        </div>
                     </div>
-                </div>
+                </Grid>
             </Grid>
-        </Grid>
 
-        <ProgressBar
-            completed={progress}
-            bgColor="#f73859"
-            baseBgColor="#404b69"
-            labelColor="#ffffff"
-            isLabelVisible={false}
-            />
+            <ProgressBar
+                completed={progress}
+                bgColor="#f73859"
+                baseBgColor="#404b69"
+                labelColor="#ffffff"
+                isLabelVisible={false}
+                />
 
-        <Grid container spacing={1}>
+            <Grid container spacing={1}>
 
-            <Grid item xs={6}>
-                {/* TODO: HOW TO RETURN MORE THAN ONE STATEMENT }
-                {/* TODO: MATERIAL SET MAXIMUM NUMBER AND REVALIDATE NEGATIVE NUMBERS}
-                {/* editing */}
-                <IconButton className={classes.iconButton} aria-label="" onClick={switchEditMode}>
-                    <EditIcon />
-                </IconButton>
+                <Grid item xs={6}>
+                    {/* TODO: HOW TO RETURN MORE THAN ONE STATEMENT }
+                    {/* TODO: MATERIAL SET MAXIMUM NUMBER AND REVALIDATE NEGATIVE NUMBERS}
+                    {/* editing */}
+                    <IconButton className={classes.iconButton} aria-label="" onClick={switchEditMode}>
+                        <EditIcon />
+                    </IconButton>
 
-                {editIsOn ? (
-                    <TextField InputProps={{ className: classes.textField}} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
-                    //<TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
-                    ): (
-                    <div></div>
-                )}
-                {editIsOn ? (
-                    <TextField InputProps={{ className: classes.numberField}} id="standard-basic" label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
-                    //<TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
-                    ): (
-                    <div></div>
-                )}
-                {editIsOn ? (
-                    <TextField InputProps={{ className: classes.numberField}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
-                    //<TextField InputLabelProps={{classes:{root: classes.cssLabel, focused: classes.cssLabel}}}InputProps={{className: classes.numberField, focused: classes.cssFocused, notchedOutline: classes.notchedOutline}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
-                    //<TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
-                    ): (
-                    <div></div>
-                )}
-               
-            </Grid>
-            <Grid item xs={6}>
-                <div class="ui one column stackable center aligned page grid">
-                    <div class="column twelve wide">
-                        {/* buttons */}
-                        <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
-                            <PlayArrowIcon />
-                        </IconButton>
+                    {editIsOn ? (
+                        <TextField InputProps={{ className: classes.textField}} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
+                        //<TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
+                        ): (
+                        <div></div>
+                    )}
+                    {editIsOn ? (
+                        <TextField InputProps={{ className: classes.numberField}} id="standard-basic" label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+                        //<TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+                        ): (
+                        <div></div>
+                    )}
+                    {editIsOn ? (
+                        <TextField InputProps={{ className: classes.numberField}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                        //<TextField InputLabelProps={{classes:{root: classes.cssLabel, focused: classes.cssLabel}}}InputProps={{className: classes.numberField, focused: classes.cssFocused, notchedOutline: classes.notchedOutline}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                        //<TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                        ): (
+                        <div></div>
+                    )}
+                 
+                </Grid>
+                <Grid item xs={6}>
+                    <div class="ui one column stackable center aligned page grid">
+                        <div class="column twelve wide">
+                            {/* buttons */}
+                            <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
+                                <PlayArrowIcon />
+                            </IconButton>
 
-                        <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
-                            <RefreshIcon />
-                        </IconButton>
+                            <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
+                                <RefreshIcon />
+                            </IconButton>
 
-                        <IconButton className={classes.iconButton} aria-label="" onClick={()=> props.removeTimer(props.timerId)}>
-                            <DeleteForeverIcon />
-                        </IconButton>
-                        {/* 
-                        <Switch
-                            className={classes.iconButton}
-                            Switch
-                            //checked={state.checkedA}
-                            //onChange={handleChange}
-                            name="checkedA"
-                            inputProps={{ 'aria-label': 'secondary checkbox' }}
-                            />
-                        */}
+                            <IconButton className={classes.iconButton} aria-label="" onClick={()=> props.removeTimer(props.timerId)}>
+                                <DeleteForeverIcon />
+                            </IconButton>
+                            {/* 
+                            <Switch
+                                className={classes.iconButton}
+                                Switch
+                                //checked={state.checkedA}
+                                //onChange={handleChange}
+                                name="checkedA"
+                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                />
+                            */}
+                        </div>
                     </div>
-                </div>
+                </Grid>
             </Grid>
-        </Grid>
         </Box> 
+        {/*
+        <Player />
+        */}
     </div>
     );
 }
