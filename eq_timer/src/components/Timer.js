@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import ProgressBar from '@ramonak/react-progress-bar';
-import Button from '@material-ui/core/Button';
 
 //text field input
 import TextField from '@material-ui/core/TextField';
@@ -13,24 +12,13 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
-//switch
-import { Switch } from '@material-ui/core';
-import { PlayCircleFilledWhite } from '@material-ui/icons';
-
 //grid
 import {Grid} from '@material-ui/core';
 
 //box
 import Box from '@material-ui/core/Box';
 
-//theme
-import {
-  createStyles,
-  ThemeProvider
-} from "@material-ui/core/styles";
-
 //audio
-import useEffect from "react";
 import soundFile from '../assets/ff.mp3';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
         //margin: theme.spacing(1),
         color: '#dbedf3', //white 
         size: 'medium'
+    },
+    bar:{
+        paddingTop: '3px',
+        paddingBottom: '10px'
     }
 }))
 
@@ -85,7 +77,7 @@ const useAudio = url => {
     const toggle = () => setPlaying(!playing);
   
     React.useEffect(() => {
-        audio.volume = 0.25;
+        audio.volume = 0.50;
         playing ? audio.play() : audio.pause();
       },
       [playing]
@@ -100,6 +92,11 @@ const useAudio = url => {
   
     return [playing, toggle];
 };
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+const cleanValue = (e) => {
+        return e.target.value > 0 ? e.target.value : 0
+}
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -140,11 +137,11 @@ function Timer(props) {
             setCurrentSeconds(maxSeconds)
             setCurrentTime(maxTime)
             findProgress()
+            setEditIsOn(false)
         }
         console.log("start")
     }
     const countDown = () => {
-        //debugger
         console.log("secs:")
         console.log(currentSeconds)
         console.log("mins:")
@@ -198,15 +195,18 @@ function Timer(props) {
         setProgress(100)
         console.log("reset");
     }
+    
     const onMinutesChange = (e) => {
-        setMaxMinutes(e.target.value)
-        setCurrentMinutes(e.target.value)
+        const cleanedValue = cleanValue(e)
+        setMaxMinutes(cleanedValue)
+        setCurrentMinutes(cleanedValue)
         console.log("min ok")
     }
     const onSecondsChange = (e) => {
-        setMaxTime(e.target.value)
-        setMaxSeconds(e.target.value)
-        setCurrentSeconds(e.target.value)
+        const cleanedValue = cleanValue(e)
+        setMaxTime(cleanedValue)
+        setMaxSeconds(cleanedValue)
+        setCurrentSeconds(cleanedValue)
         console.log("sec ok")
     }
     const onNameChange = (e) => {
@@ -226,38 +226,7 @@ function Timer(props) {
     }
     const classes = useStyles();
     return (
-    //<div class="ui container" > 
     <div> 
-        {/* </div><div class="ui input">  */}
-                        {/*
-            */}
-
-            {/*
-            <input class="ui input" 
-                type="text" 
-                placeholder="Name of buff..." 
-                value={nameOfBuff} 
-                onChange={onNameChange}/> 
-
-            <input type="number" 
-                min="0" 
-                max="900" 
-                size="1" 
-                value={maxMinutes} 
-                onKeyDown={blockInvalidInput} 
-                onChange={onMinutesChange} />
-
-            <input type="number" 
-                min="0" 
-                max="59" 
-                size="1" 
-                value={maxSeconds} 
-                onKeyDown={blockInvalidInput} 
-                onChange={onSecondsChange} />
-            */}
-
-            
-
         <Box pl={6} pr={6}>
             <Grid container spacing={1}>
                 <Grid item xs={6}>
@@ -266,23 +235,29 @@ function Timer(props) {
                 <Grid item xs={6}>
                     <div class="ui one column stackable center aligned page grid">
                         <div class="column twelve wide">
-                            <label style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} mins {currentSeconds} secs</label>
+                            {currentMinutes != 0 ? (
+                                    <span style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} &nbsp; mins &nbsp;{currentSeconds} &nbsp; secs</span>
+                            ): (
+                                    <span style={{ fontSize: 20, color: "#dbedf3"}}>{currentSeconds} &nbsp; secs</span>
+                            )}
                         </div>
                     </div>
                 </Grid>
             </Grid>
 
-            <ProgressBar
-                completed={progress}
-                bgColor="#f73859"
-                baseBgColor="#404b69"
-                labelColor="#ffffff"
-                isLabelVisible={false}
-                />
+            <Grid item spacing={1} className={classes.bar}>
+                <ProgressBar
+                    completed={progress}
+                    bgColor="#f73859"
+                    baseBgColor="#404b69"
+                    labelColor="#ffffff"
+                    isLabelVisible={false}
+                    />
+            </Grid>
 
             <Grid container spacing={1}>
 
-                <Grid item xs={6}>
+                <Grid item xs={7}>
                     {/* TODO: HOW TO RETURN MORE THAN ONE STATEMENT }
                     {/* TODO: MATERIAL SET MAXIMUM NUMBER AND REVALIDATE NEGATIVE NUMBERS}
                     {/* editing */}
@@ -291,29 +266,21 @@ function Timer(props) {
                     </IconButton>
 
                     {editIsOn ? (
-                        <TextField InputProps={{ className: classes.textField}} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
-                        //<TextField className={classes.textField} id="standard-basic" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
-                        ): (
-                        <div></div>
-                    )}
-                    {editIsOn ? (
-                        <TextField InputProps={{ className: classes.numberField}} id="standard-basic" label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
-                        //<TextField className={classes.numberField} id="standard-basic" InputProps={{ InputProps: {min: 0} }} label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
-                        ): (
-                        <div></div>
-                    )}
-                    {editIsOn ? (
-                        <TextField InputProps={{ className: classes.numberField}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
-                        //<TextField InputLabelProps={{classes:{root: classes.cssLabel, focused: classes.cssLabel}}}InputProps={{className: classes.numberField, focused: classes.cssFocused, notchedOutline: classes.notchedOutline}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
-                        //<TextField className={classes.numberField} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                        <Fragment>
+                            <TextField InputProps={{ className: classes.textField}} id="standard-basic" autoComplete="off" label="Name of Buff" value={nameOfBuff} onChange={onNameChange} />
+                            <TextField InputProps={{ className: classes.numberField}} id="standard-basic" label="Minutes" type="number" value={maxMinutes} onKeyDown={blockInvalidInput} onChange={onMinutesChange} />
+                            <TextField InputProps={{ className: classes.numberField}} id="standard-basic" min="0" max="59" label="Seconds" type="number" value={maxSeconds} onKeyDown={blockInvalidInput} onChange={onSecondsChange} />
+                        </Fragment>
                         ): (
                         <div></div>
                     )}
                  
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={5}>
+                    {/*
                     <div class="ui one column stackable center aligned page grid">
                         <div class="column twelve wide">
+                    */}
                             {/* buttons */}
                             <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
                                 <PlayArrowIcon />
@@ -336,8 +303,10 @@ function Timer(props) {
                                 inputProps={{ 'aria-label': 'secondary checkbox' }}
                                 />
                             */}
+                        {/*
                         </div>
                     </div>
+                        */}
                 </Grid>
             </Grid>
         </Box> 

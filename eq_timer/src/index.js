@@ -5,7 +5,8 @@ import Timer from './components/Timer';
 //icon buttons
 import { makeStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton'
-import AddIcon from '@material-ui/icons/Add';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+
 
 //box 
 import Box from '@material-ui/core/Box'
@@ -53,7 +54,7 @@ function App (){
         <div>
             <ThemeProvider theme={theme}> 
                 <Box p={3}>
-                    <h1 style={{color: "#dbedf3"}}>eqtimer</h1>
+                    <h1 style={{color: "#dbedf3"}}>EQ Timer</h1>
                 </Box>
                 <div>
                     {timerIds.map (id => {
@@ -70,7 +71,7 @@ function App (){
                     <div class="ui one column stackable center aligned page grid">
                         <div class="column twelve wide">
                             <IconButton className={classes.iconButton} aria-label="" onClick={addTimer}>
-                                <AddIcon />
+                                <AddCircleOutlineIcon />
                             </IconButton>
                         </div>
                     </div>
