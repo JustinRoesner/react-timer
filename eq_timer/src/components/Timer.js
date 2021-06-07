@@ -233,14 +233,12 @@ function Timer(props) {
                     <label style={{ fontSize: 25, color: "#dbedf3"}}>{nameOfBuff}</label>
                 </Grid>
                 <Grid item xs={6}>
-                    <div class="ui one column stackable center aligned page grid">
-                        <div class="column twelve wide">
-                            {currentMinutes != 0 ? (
-                                    <span style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} &nbsp; mins &nbsp;{currentSeconds} &nbsp; secs</span>
-                            ): (
-                                    <span style={{ fontSize: 20, color: "#dbedf3"}}>{currentSeconds} &nbsp; secs</span>
-                            )}
-                        </div>
+                    <div align="right">
+                        {currentMinutes != 0 ? (
+                                <span style={{ fontSize: 20, color: "#dbedf3"}}>{currentMinutes} &nbsp; mins &nbsp;{currentSeconds} &nbsp; secs</span>
+                        ): (
+                                <span style={{ fontSize: 20, color: "#dbedf3"}}>{currentSeconds} &nbsp; secs</span>
+                        )}
                     </div>
                 </Grid>
             </Grid>
@@ -277,36 +275,30 @@ function Timer(props) {
                  
                 </Grid>
                 <Grid item xs={5}>
-                    {/*
-                    <div class="ui one column stackable center aligned page grid">
-                        <div class="column twelve wide">
-                    */}
-                            {/* buttons */}
-                            <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
-                                <PlayArrowIcon />
-                            </IconButton>
+                    <div align="right">
+                        {/* icon buttons */}
+                        <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
+                            <PlayArrowIcon />
+                        </IconButton>
 
-                            <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
-                                <RefreshIcon />
-                            </IconButton>
+                        <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
+                            <RefreshIcon />
+                        </IconButton>
 
-                            <IconButton className={classes.iconButton} aria-label="" onClick={()=> props.removeTimer(props.timerId)}>
-                                <DeleteForeverIcon />
-                            </IconButton>
-                            {/* 
-                            <Switch
-                                className={classes.iconButton}
-                                Switch
-                                //checked={state.checkedA}
-                                //onChange={handleChange}
-                                name="checkedA"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                />
-                            */}
-                        {/*
-                        </div>
+                        <IconButton className={classes.iconButton} aria-label="" onClick={()=> props.removeTimer(props.timerId)}>
+                            <DeleteForeverIcon />
+                        </IconButton>
                     </div>
-                        */}
+                    {/*
+                    <Switch
+                        className={classes.iconButton}
+                        Switch
+                        //checked={state.checkedA}
+                        //onChange={handleChange}
+                        name="checkedA"
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                        />
+                    */}
                 </Grid>
             </Grid>
         </Box> 
