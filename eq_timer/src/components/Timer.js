@@ -11,6 +11,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
+import PauseIcon from '@material-ui/icons/Pause';
 
 //grid
 import {Grid} from '@material-ui/core';
@@ -20,6 +21,7 @@ import Box from '@material-ui/core/Box';
 
 //audio
 import soundFile from '../assets/ff.mp3';
+import menuSoundFile from '../assets/ffstart.mp3';
 
 const useStyles = makeStyles((theme) => ({
     textField:{
@@ -69,15 +71,14 @@ const useInterval = (callback, delay) => {
 
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
-const useAudio = url => {
-    const [audio] = useState(new Audio(soundFile));
-    //const [audio] = useState(new Audio("http://soundfxcenter.com/video-games/final-fantasy-xi/8d82b5_Final_Fantasy_XI_Caught_Fish_Sound_Effect.mp3"));
+const useAudio = soundToUse => {
+    const [audio] = useState(new Audio(soundToUse));
     const [playing, setPlaying] = useState(false);
   
     const toggle = () => setPlaying(!playing);
   
     React.useEffect(() => {
-        audio.volume = 0.50;
+        audio.volume = 0.60;
         playing ? audio.play() : audio.pause();
       },
       [playing]
@@ -124,22 +125,37 @@ function Timer(props) {
     const [nameOfBuff, setNameOfBuff] = useState('')
 
     //audio
-    const [playing, toggle] = useAudio();
+    const [playing, toggleSoundFile] = useAudio(soundFile);
+    const [playingAgain, toggleMenuSoundFile] = useAudio(menuSoundFile);
 
     useInterval(() =>{
         countDown()
     }, isOn === true ? 1000 : null)
 
     const startTimer = () => {
-        if (!isOn){
+        //if no time left in timer
+        if (!isOn && currentMinutes + currentSeconds == 0){
             setIsOn(true)
             setCurrentMinutes(maxMinutes)
             setCurrentSeconds(maxSeconds)
             setCurrentTime(maxTime)
             findProgress()
             setEditIsOn(false)
+
+            toggleMenuSoundFile('true') // PLAY SOUND
+        }
+        else{
+            //if time left in timer
+            setIsOn(true)
+            findProgress()
+            setEditIsOn(false)
+
+            toggleMenuSoundFile('true') // PLAY SOUND
         }
         console.log("start")
+    }
+    const pauseTimer = () => {
+        setIsOn(false)
     }
     const countDown = () => {
         console.log("secs:")
@@ -150,7 +166,7 @@ function Timer(props) {
         if (currentSeconds === 0 && currentMinutes === 0){
             console.log("end the countdown")
             setIsOn(false)
-            toggle('true') // PLAY SOUND
+            toggleSoundFile('true') // PLAY SOUND
         }
         //i dont have seconds but i have mins
         if (currentSeconds == 0 && currentMinutes > 0){
@@ -244,13 +260,24 @@ function Timer(props) {
             </Grid>
 
             <Grid item spacing={1} className={classes.bar}>
-                <ProgressBar
-                    completed={progress}
-                    bgColor="#f73859"
-                    baseBgColor="#404b69"
-                    labelColor="#ffffff"
-                    isLabelVisible={false}
-                    />
+
+                {isOn ? (
+                    <ProgressBar
+                        completed={progress}
+                        bgColor="#ffd53d"
+                        baseBgColor="#404b69"
+                        labelColor="#ffffff"
+                        isLabelVisible={false}
+                        />
+                ): (
+                    <ProgressBar
+                        completed={progress}
+                        bgColor="#f73859"
+                        baseBgColor="#404b69"
+                        labelColor="#ffffff"
+                        isLabelVisible={false}
+                        />
+                )}
             </Grid>
 
             <Grid container spacing={1}>
@@ -277,9 +304,15 @@ function Timer(props) {
                 <Grid item xs={5}>
                     <div align="right">
                         {/* icon buttons */}
-                        <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
-                            <PlayArrowIcon />
-                        </IconButton>
+                        {isOn ? (
+                            <IconButton className={classes.iconButton} aria-label="" onClick={pauseTimer}>
+                                <PauseIcon />
+                            </IconButton>
+                        ):(
+                            <IconButton className={classes.iconButton} aria-label="" onClick={startTimer}>
+                                <PlayArrowIcon />
+                            </IconButton>
+                        )}
 
                         <IconButton className={classes.iconButton} aria-label="" onClick={resetTimer}>
                             <RefreshIcon />
