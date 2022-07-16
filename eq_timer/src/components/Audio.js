@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import soundFile from '../assets/ff.mp3';
+import soundFile from "../assets/ff.mp3";
 
-const useAudio = url => {
+const useAudio = (url) => {
   const [audio] = useState(new Audio(soundFile));
   //const [audio] = useState(new Audio("http://soundfxcenter.com/video-games/final-fantasy-xi/8d82b5_Final_Fantasy_XI_Caught_Fish_Sound_Effect.mp3"));
   const [playing, setPlaying] = useState(false);
@@ -9,16 +9,14 @@ const useAudio = url => {
   const toggle = () => setPlaying(!playing);
 
   useEffect(() => {
-      audio.volume = 0.15;
-      playing ? audio.play() : audio.pause();
-    },
-    [playing]
-  );
+    audio.volume = 0.15;
+    playing ? audio.play() : audio.pause();
+  }, [playing]);
 
   useEffect(() => {
-    audio.addEventListener('ended', () => setPlaying(false));
+    audio.addEventListener("ended", () => setPlaying(false));
     return () => {
-      audio.removeEventListener('ended', () => setPlaying(false));
+      audio.removeEventListener("ended", () => setPlaying(false));
     };
   }, []);
 
