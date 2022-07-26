@@ -120,7 +120,7 @@ function Timer(props) {
   const [editIsOn, setEditIsOn] = useState(true);
 
   //string
-  const [nameOfBuff, setNameOfBuff] = useState("");
+  const [nameOfTimer, setNameOfTimer] = useState("");
 
   //audio
   const [playing, toggleSoundFile] = useAudio(soundFile);
@@ -225,7 +225,7 @@ function Timer(props) {
     console.log("sec ok");
   };
   const onNameChange = (e) => {
-    setNameOfBuff(e.target.value);
+    setNameOfTimer(e.target.value);
     console.log("name ok");
   };
   const blockInvalidInput = (e) => {
@@ -245,7 +245,7 @@ function Timer(props) {
         <Grid container spacing={1}>
           <Grid item xs={6}>
             <label style={{ fontSize: 25, color: "#dbedf3" }}>
-              {nameOfBuff}
+              {nameOfTimer}
             </label>
           </Grid>
           <Grid item xs={6}>
@@ -303,8 +303,8 @@ function Timer(props) {
                   InputProps={{ className: classes.textField }}
                   id="standard-basic"
                   autoComplete="off"
-                  label="Name of Buff"
-                  value={nameOfBuff}
+                  label="Name"
+                  value={nameOfTimer}
                   onChange={onNameChange}
                 />
                 <TextField
