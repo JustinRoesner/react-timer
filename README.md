@@ -5,7 +5,7 @@ Website that uses React Material UI styling to create custom timers.
 ## Live Site
 [Website](http://eqtimer.hugesalt.com/)
 
-![site screenshot](https://justinroesner.com/images/project-timer.jpg)
+![site screenshot](https://justinroesner.com/images/project-timer.jpg | width=200)
 
 ## Run Project Locally
 In the project directory, you can run:
