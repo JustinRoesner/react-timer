@@ -1,6 +1,6 @@
 # React Timer
-Website that uses React Material UI styling to create custom timers.  
-**HTML, CSS, JS, React, Material UI**
+**HTML, CSS, JS, React, Material UI**  
+Website that uses React Material UI styling to create custom timers.
 
 ## Live Site
 [Website](http://eqtimer.hugesalt.com/)
