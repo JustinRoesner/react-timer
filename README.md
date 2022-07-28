@@ -1,5 +1,5 @@
 # React Timer
-Website that uses React Material UI styling to create custom timers.
+Website that uses React Material UI styling to create custom timers.  
 **HTML, CSS, JS, React, Material UI**
 
 ## Live Site
